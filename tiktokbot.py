@@ -14,23 +14,23 @@ from httpclient import HttpClient
 from datetime import datetime
 from dateutil import tz
 from dotenv import load_dotenv
-# Set interpreter here
+from InternetArchiveUploader import InternetArchiveUploader
 
-
-# Outisde of class scope
-def uploadVideo(file,user_and_time,identifier):
-    
+def uploadVideo(file,identifier,metadata):
     load_dotenv(override=True)
+    username=os.getenv('IA_USERNAME')
+    password=os.getenv('IA_PASSWORD')
+    uploader= InternetArchiveUploader(identifier,metadata,username,password)
+    uploader.uploadFile(file)
     
-#     [*] 2024-01-11 20:15:36 - ERROR - ('Connection broken: IncompleteRead(229060 bytes read, 1027927 more expected)', IncompleteRead(229060
-# [*] URL: https://www.tiktok.com/@daniellarsonwork2024/video/7322605256939031850                                                        │ bytes read, 1027927 more expected))                                                                                  │> bash current_run_script.bash
-    interpreter=os.getenv('INTERPRETER')
-    archive_uploader_dir=os.getenv('ARCHIVE_UPLOADER_DIR')
+def uploadDirectory(identifier,metadata):
+    load_dotenv(override=True)
+    username=os.getenv('IA_USERNAME')
+    password=os.getenv('IA_PASSWORD')
+    uploader= InternetArchiveUploader(identifier,metadata,username,password)
+    uploader.uploadDirectory('lives')
+ 
     
-    # Will require absolute path
-    #/home/james/tiktok-live-recorder/ + file
-    print([interpreter, os.path.join(archive_uploader_dir,"internetArchiveUploader.py"), "-d",os.path.join(os.getcwd(),file),"-t",user_and_time,"-i",identifier,"-f"])
-    subprocess.run([interpreter, os.path.join(archive_uploader_dir,"internetArchiveUploader.py"), "-d",os.path.join(os.getcwd(),file),"-t",user_and_time,"-i",identifier,"-f"])
 
 
 class TikTok:
@@ -95,7 +95,19 @@ class TikTok:
                 if not self.is_user_in_live():
                     self.logger.info(f"{self.user} is offline")
                     self.logger.info(f"waiting {TimeOut.AUTOMATIC_MODE} minutes before recheck\n")
+                    uploadDirectory(f"daniel_larson_media_tiktoklives_{self.user}",{
+                    'title': f"@{self.user} lives",
+                    'mediatype': 'video',
+                    'collection': 'opensource_movies',
+                    'date': '2024-01-4',
+                    'description': 'A video or picture of Daniel Larson',
+                    'subject': [ 'daniel larson', 'tik tok'],
+                    'creator': 'Daniel Larson',
+                    'language': 'English',
+                    'licenseurl': 'http://creativecommons.org/publicdomain/zero/1.0/'
+                    })
                     time.sleep(TimeOut.AUTOMATIC_MODE * TimeOut.ONE_MINUTE)
+                    
                     continue
 
                 self.start_recording()
@@ -153,10 +165,6 @@ class TikTok:
                     stream = ffmpeg.output(stream,filename, c='copy')
 
                 ffmpeg.run(stream, quiet=True)
-                # Upload video here
-                #
-                # title should be something like @username starttime
-                uploadVideo(filename,f"{self.user}_{start_time}","daniel_larson_media_tiktoklives")
             else:
                 self.logger.info("[PRESS ONLY ONCE CTRL + C TO STOP]")
                 response = self.httpclient.get(live_url, stream=True)
