@@ -20,7 +20,7 @@ class TimeOut(IntEnum):
         return self.value * operator
 
     ONE_MINUTE = 60
-    AUTOMATIC_MODE = 5
+    AUTOMATIC_MODE = 1
     CONNECTION_CLOSED = 2
 
 class StatusCode(IntEnum):
