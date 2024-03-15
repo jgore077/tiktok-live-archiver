@@ -17,14 +17,14 @@ from dotenv import load_dotenv
 from InternetArchiveUploader import InternetArchiveUploader
 
 def uploadVideo(file,identifier,metadata):
-    load_dotenv(override=True)
+    load_dotenv()
     username=os.getenv('IA_USERNAME')
     password=os.getenv('IA_PASSWORD')
     uploader= InternetArchiveUploader(identifier,metadata,username,password)
     uploader.uploadFile(file)
     
 def uploadDirectory(identifier,metadata):
-    load_dotenv(override=True)
+    load_dotenv()
     username=os.getenv('IA_USERNAME')
     password=os.getenv('IA_PASSWORD')
     uploader= InternetArchiveUploader(identifier,metadata,username,password)
