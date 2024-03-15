@@ -22,7 +22,8 @@ def uploadVideo(file,user_and_time,identifier):
     
     load_dotenv(override=True)
     
-
+#     [*] 2024-01-11 20:15:36 - ERROR - ('Connection broken: IncompleteRead(229060 bytes read, 1027927 more expected)', IncompleteRead(229060
+# [*] URL: https://www.tiktok.com/@daniellarsonwork2024/video/7322605256939031850                                                        │ bytes read, 1027927 more expected))                                                                                  │> bash current_run_script.bash
     interpreter=os.getenv('INTERPRETER')
     archive_uploader_dir=os.getenv('ARCHIVE_UPLOADER_DIR')
     
