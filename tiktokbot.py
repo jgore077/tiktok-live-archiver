@@ -125,8 +125,8 @@ class TikTok:
             self.logger.error("FFmpeg is not installed.")
 
     def start_recording(self):
-        # Daniel Time
-     
+        
+        # Uses mountain time by default
         start_time =datetime.now(tz=tz.gettz(name='Mountain Standard Time')).strftime("%m/%d/%Y_%I:%M:%S%p")
         """
         Start recording live
