@@ -2,3 +2,4 @@ requests
 argparse
 ffmpeg-python
 internet-archive-uploader
+python-dateutil
