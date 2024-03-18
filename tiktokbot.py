@@ -1,13 +1,14 @@
+from curses import meta
 import os
 import re
 import sys
 import time
-import subprocess
 
 import ffmpeg
 import requests as req
 from requests import Session
 
+import json
 import errors
 from enums import Mode, Error, StatusCode, TimeOut
 from httpclient import HttpClient
@@ -16,23 +17,31 @@ from dateutil import tz
 from dotenv import load_dotenv
 from InternetArchiveUploader import InternetArchiveUploader
 
-def uploadVideo(file,identifier,metadata):
+def uploadVideo(file):
+    with open('metadata.json') as json_file:
+        metadata = json.load(json_file)
+        
     load_dotenv()
+    identifier=os.getenv('IDENTIFIER')
     username=os.getenv('IA_USERNAME')
     password=os.getenv('IA_PASSWORD')
+    
     uploader= InternetArchiveUploader(identifier,metadata,username,password)
     uploader.uploadFile(file)
     
-def uploadDirectory(identifier,metadata):
+def uploadDirectory(directory):
+    with open('metadata.json') as json_file:
+        metadata = json.load(json_file)
+        
     load_dotenv()
+    identifier=os.getenv('IDENTIFIER')
     username=os.getenv('IA_USERNAME')
     password=os.getenv('IA_PASSWORD')
-    uploader= InternetArchiveUploader(identifier,metadata,username,password)
-    uploader.uploadDirectory('lives')
- 
     
-
-
+    uploader= InternetArchiveUploader(identifier,metadata,username,password)
+    uploader.uploadDirectory(directory)
+ 
+ 
 class TikTok:
 
     def __init__(self, httpclient, output, mode, logger, url=None, user=None, room_id=None, use_ffmpeg=None, duration=None,
@@ -95,17 +104,7 @@ class TikTok:
                 if not self.is_user_in_live():
                     self.logger.info(f"{self.user} is offline")
                     self.logger.info(f"waiting {TimeOut.AUTOMATIC_MODE} minutes before recheck\n")
-                    uploadDirectory(f"daniel_larson_media_tiktoklives_{self.user}",{
-                    'title': f"@{self.user} lives",
-                    'mediatype': 'video',
-                    'collection': 'opensource_movies',
-                    'date': '2024-01-4',
-                    'description': 'A video or picture of Daniel Larson',
-                    'subject': [ 'daniel larson', 'tik tok'],
-                    'creator': 'Daniel Larson',
-                    'language': 'English',
-                    'licenseurl': 'http://creativecommons.org/publicdomain/zero/1.0/'
-                    })
+                    uploadDirectory('lives')
                     time.sleep(TimeOut.AUTOMATIC_MODE * TimeOut.ONE_MINUTE)
                     
                     continue
