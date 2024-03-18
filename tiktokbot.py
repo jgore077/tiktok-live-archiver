@@ -1,4 +1,3 @@
-from curses import meta
 import os
 import re
 import sys
