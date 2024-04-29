@@ -1,0 +1,11 @@
+{
+    "title": "my title",
+    "mediatype": "video",
+    "collection": "opensource_movies",
+    "date": "date of your choice I.E (2024-01-4)",
+    "description": "Your description",
+    "subject": [ "subject 1", "subject 2"],
+    "creator": "the creator",
+    "language": "English",
+    "licenseurl": "http://creativecommons.org/publicdomain/zero/1.0/"
+}
